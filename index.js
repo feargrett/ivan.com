@@ -2,19 +2,19 @@ import { $ } from './helper.js';
 
 const bosses = [];
 
-const setData = () =>  {  
-  fetch('https://eldenring.fanapis.com/api/bosses?limit=100')
-  .then(response => response.json())
-  .then(json => {
-    bosses.push(...json.data);
-    let html = '';
-    for (const boss of bosses) 
-      html += '<option value="' + boss.id +'" ' + (bosses.indexOf(boss) === 4 ? "selected" : "") + '>' + boss.name + '</option>';
-    $('#select_one').innerHTML = html;
-    $('#select_two').innerHTML = html;
-    setResult(bosses[4].id, '#result_one');
-    setResult(bosses[4].id, '#result_two');
-  });
+const apiGetBosses = () => fetch('https://eldenring.fanapis.com/api/bosses?limit=100')
+                                .then(response => response.json());
+
+const initialize = async () =>  {  
+  const response = await apiGetBosses();
+  bosses.push(...response.data);
+  let html = '';
+  for (const boss of bosses) 
+    html += '<option value="' + boss.id +'" ' + (bosses.indexOf(boss) === 4 ? "selected" : "") + '>' + boss.name + '</option>';
+  $('#select_one').innerHTML = html;
+  $('#select_two').innerHTML = html;
+  setCard(bosses[4].id, '#result_one');
+  setCard(bosses[4].id, '#result_two');
 }
 
 const card = (name, image, location, description, healthPoints) => `
@@ -43,18 +43,18 @@ const card = (name, image, location, description, healthPoints) => `
 
 const getBoss = (id) => bosses.find(boss => boss.id === id);
 
-const setResult = (value, element) => {
+const setCard = (value, element) => {
   const boss = getBoss(value);
   $(element).innerHTML = card(boss.name, boss.image, boss.location, boss.description, boss.healthPoints);
 };
 
-window.onload = () => {
-  setData();  
+window.onload = async () => {
+  await initialize();  
   $('#select_one').onchange = function() { 
-    setResult(this.value, '#result_one');
+    setCard(this.value, '#result_one');
   };
   $('#select_two').onchange = function() { 
-    setResult(this.value, '#result_two');
+    setCard(this.value, '#result_two');
   };
 };
 
