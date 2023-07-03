@@ -2,12 +2,14 @@ import { $ } from './helper.js';
 
 const bosses = [];
 
-const apiGetBosses = () => fetch('https://eldenring.fanapis.com/api/bosses?limit=100')
-                                .then(response => response.json());
+const apiGetBosses = (limit = 100, page = 0) => {
+  return fetch('https://eldenring.fanapis.com/api/bosses?limit=' + limit + '&page=' + page)
+        .then(response => response.json());
+} 
 
 const initialize = async () =>  {  
-  const response = await apiGetBosses();
-  bosses.push(...response.data);
+  const response = [...(await apiGetBosses(100,0)).data, ...(await apiGetBosses(100,1)).data];
+  bosses.push(...response);
   let html = '';
   for (const boss of bosses) 
     html += '<option value="' + boss.id +'" ' + (bosses.indexOf(boss) === 4 ? "selected" : "") + '>' + boss.name + '</option>';
