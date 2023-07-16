@@ -1,5 +1,4 @@
-export const cardComponent = function (element) {
-  
+export const cardComponent = (element) => {
   let _element = element;
   let _name;
   let _image;
