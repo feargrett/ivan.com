@@ -1,5 +1,5 @@
 import { $ } from './helper.js';
-import { cardComponent } from './card.js';
+import { cardComponent } from './card-component.js';
 
 const bosses = [];
 const [initializeCardOne] = cardComponent('#result_one');
